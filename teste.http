@@ -1,0 +1,19 @@
+### Create a new Aluno
+POST http://localhost:8080/aluno
+Content-Type: application/json
+
+{
+  "nome": "Joao da Silva",
+  "dataNascimento": "2000-01-15",
+  "matriculaAtiva": true,
+  "estadoCivil": "SOLTEIRO",
+  "telefones": [
+    "21999998888"
+  ],
+  "curso": 1
+}
+
+### Create a new Aluno
+GET http://localhost:8080/aluno
+Content-Type: application/json
+
