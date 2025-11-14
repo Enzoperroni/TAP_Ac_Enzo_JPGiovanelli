@@ -9,4 +9,5 @@ public class TurmaDTO {
     private int ano;
     private int semestre;
     private int disciplina;
+    private long professor;
 }

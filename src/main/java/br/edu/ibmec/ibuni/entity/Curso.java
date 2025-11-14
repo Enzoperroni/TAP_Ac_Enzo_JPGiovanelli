@@ -24,7 +24,7 @@ public class Curso {
 
     @JsonIgnore
     @OneToMany(mappedBy = "curso")
-    private List<Aluno> alunos = new ArrayList<>();
+    private List<Matricula> matriculas = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "curso")

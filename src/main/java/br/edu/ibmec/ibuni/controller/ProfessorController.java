@@ -30,7 +30,7 @@ public class ProfessorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProfessorDTO> getById(@PathVariable("id") long id) {
+    public ResponseEntity<ProfessorDTO> getById(@PathVariable("id") int id) {
         return professorService.findById(id)
                 .map(dto -> new ResponseEntity<>(dto, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -47,7 +47,7 @@ public class ProfessorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProfessorDTO> update(@PathVariable("id") long id, @RequestBody ProfessorDTO professorDTO) {
+    public ResponseEntity<ProfessorDTO> update(@PathVariable("id") int id, @RequestBody ProfessorDTO professorDTO) {
         try {
             ProfessorDTO updatedProfessor = professorService.update(id, professorDTO);
             return new ResponseEntity<>(updatedProfessor, HttpStatus.OK);
@@ -59,7 +59,7 @@ public class ProfessorController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable("id") long id) {
+    public ResponseEntity<HttpStatus> delete(@PathVariable("id") int id) {
         try {
             professorService.delete(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

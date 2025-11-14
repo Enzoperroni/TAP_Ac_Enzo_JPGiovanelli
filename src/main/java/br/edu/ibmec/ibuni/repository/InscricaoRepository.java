@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import br.edu.ibmec.ibuni.entity.Inscricao;
 
 @Repository
-public interface InscricaoRepository extends JpaRepository<Inscricao, Long> {
+public interface InscricaoRepository extends JpaRepository<Inscricao, Integer> {
 }

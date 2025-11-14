@@ -30,7 +30,7 @@ public class InscricaoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<InscricaoDTO> getById(@PathVariable("id") Long id) {
+    public ResponseEntity<InscricaoDTO> getById(@PathVariable("id") int id) {
         return inscricaoService.findById(id)
                 .map(dto -> new ResponseEntity<>(dto, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -47,7 +47,7 @@ public class InscricaoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<InscricaoDTO> update(@PathVariable("id") Long id, @RequestBody InscricaoDTO inscricaoDTO) {
+    public ResponseEntity<InscricaoDTO> update(@PathVariable("id") int id, @RequestBody InscricaoDTO inscricaoDTO) {
         try {
             InscricaoDTO updatedInscricao = inscricaoService.update(id, inscricaoDTO);
             return new ResponseEntity<>(updatedInscricao, HttpStatus.OK);
@@ -59,7 +59,7 @@ public class InscricaoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable("id") Long id) {
+    public ResponseEntity<HttpStatus> delete(@PathVariable("id") int id) {
         try {
             inscricaoService.delete(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

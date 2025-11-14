@@ -28,6 +28,9 @@ public class Turma {
     @ManyToOne
     private Disciplina disciplina;
 
+    @ManyToOne
+    private Professor professor;
+
     @JsonIgnore
     @OneToMany(mappedBy = "turma")
     private List<Inscricao> inscricoes = new ArrayList<>();

@@ -1,21 +1,14 @@
 package br.edu.ibmec.ibuni.controller;
 
-import java.util.List;
-
+import br.edu.ibmec.ibuni.dto.AlunoDTO;
+import br.edu.ibmec.ibuni.entity.Aluno;
+import br.edu.ibmec.ibuni.service.AlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import br.edu.ibmec.ibuni.dto.AlunoDTO;
-import br.edu.ibmec.ibuni.service.AlunoService;
+import java.util.List;
 
 @RestController
 @RequestMapping("/aluno")
@@ -25,31 +18,35 @@ public class AlunoController {
     private AlunoService alunoService;
 
     @GetMapping
-    public ResponseEntity<List<AlunoDTO>> getAll() {
-        return new ResponseEntity<>(alunoService.findAll(), HttpStatus.OK);
+    public ResponseEntity<List<Aluno>> getAll() {
+        List<Aluno> alunos = alunoService.getAll();
+        return new ResponseEntity<>(alunos, HttpStatus.OK);
     }
 
-    @GetMapping("/{matricula}")
-    public ResponseEntity<AlunoDTO> getById(@PathVariable("matricula") int matricula) {
-        return alunoService.findById(matricula)
-                .map(dto -> new ResponseEntity<>(dto, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    @GetMapping("/{id}")
+    public ResponseEntity<Aluno> getById(@PathVariable("id") int id) {
+        Aluno aluno = alunoService.getById(id);
+        if (aluno != null) {
+            return new ResponseEntity<>(aluno, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping
-    public ResponseEntity<AlunoDTO> create(@RequestBody AlunoDTO alunoDTO) {
+    public ResponseEntity<Aluno> create(@RequestBody AlunoDTO alunoDTO) {
         try {
-            AlunoDTO savedAluno = alunoService.save(alunoDTO);
+            Aluno savedAluno = alunoService.save(alunoDTO);
             return new ResponseEntity<>(savedAluno, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PutMapping("/{matricula}")
-    public ResponseEntity<AlunoDTO> update(@PathVariable("matricula") int matricula, @RequestBody AlunoDTO alunoDTO) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Aluno> update(@PathVariable("id") int id, @RequestBody AlunoDTO alunoDTO) {
         try {
-            AlunoDTO updatedAluno = alunoService.update(matricula, alunoDTO);
+            Aluno updatedAluno = alunoService.update(id, alunoDTO);
             return new ResponseEntity<>(updatedAluno, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -58,10 +55,10 @@ public class AlunoController {
         }
     }
 
-    @DeleteMapping("/{matricula}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable("matricula") int matricula) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> delete(@PathVariable("id") int id) {
         try {
-            alunoService.delete(matricula);
+            alunoService.delete(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

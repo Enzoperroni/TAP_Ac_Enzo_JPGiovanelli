@@ -15,6 +15,9 @@ import br.edu.ibmec.ibuni.entity.Turma;
 import br.edu.ibmec.ibuni.repository.AlunoRepository;
 import br.edu.ibmec.ibuni.repository.InscricaoRepository;
 import br.edu.ibmec.ibuni.repository.TurmaRepository;
+import br.edu.ibmec.ibuni.strategy.InscricaoContext;
+import br.edu.ibmec.ibuni.strategy.MediaAritmeticaStrategy;
+import br.edu.ibmec.ibuni.strategy.SituacaoPadraoStrategy;
 
 @Service
 public class InscricaoService {
@@ -32,7 +35,7 @@ public class InscricaoService {
         return inscricaoRepository.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
-    public Optional<InscricaoDTO> findById(Long id) {
+    public Optional<InscricaoDTO> findById(int id) {
         return inscricaoRepository.findById(id).map(this::convertToDto);
     }
 
@@ -44,7 +47,7 @@ public class InscricaoService {
         return convertToDto(savedInscricao);
     }
 
-    public InscricaoDTO update(Long id, InscricaoDTO inscricaoDTO) {
+    public InscricaoDTO update(int id, InscricaoDTO inscricaoDTO) {
         return inscricaoRepository.findById(id).map(inscricao -> {
             updateInscricaoFromDto(inscricao, inscricaoDTO);
             Inscricao updatedInscricao = inscricaoRepository.save(inscricao);
@@ -52,7 +55,7 @@ public class InscricaoService {
         }).orElseThrow(() -> new RuntimeException("Inscrição não encontrada com o id: " + id));
     }
 
-    public void delete(Long id) {
+    public void delete(int id) {
         inscricaoRepository.deleteById(id);
     }
 
@@ -65,7 +68,7 @@ public class InscricaoService {
         dto.setNumFaltas(inscricao.getNumFaltas());
         dto.setSituacao(inscricao.getSituacao());
         if (inscricao.getAluno() != null) {
-            dto.setAluno(inscricao.getAluno().getMatricula());
+            dto.setAluno(inscricao.getAluno().getId());
         }
         if (inscricao.getTurma() != null) {
             dto.setTurma(inscricao.getTurma().getCodigo());
@@ -78,14 +81,8 @@ public class InscricaoService {
         inscricao.setAvaliacao2(inscricaoDTO.getAvaliacao2());
         inscricao.setNumFaltas(inscricaoDTO.getNumFaltas());
         
-        float media = (inscricao.getAvaliacao1() + inscricao.getAvaliacao2()) / 2;
-        inscricao.setMedia(media);
-
-        if (media >= 7.0) {
-            inscricao.setSituacao(Situacao.APROVADO);
-        } else {
-            inscricao.setSituacao(Situacao.REPROVADO);
-        }
+        InscricaoContext context = new InscricaoContext(new MediaAritmeticaStrategy(), new SituacaoPadraoStrategy());
+        context.calcular(inscricao);
 
         if (inscricaoDTO.getAluno() != 0) {
             Optional<Aluno> aluno = alunoRepository.findById(inscricaoDTO.getAluno());

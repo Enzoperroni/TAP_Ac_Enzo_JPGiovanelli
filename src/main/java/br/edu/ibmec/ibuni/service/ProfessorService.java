@@ -26,7 +26,7 @@ public class ProfessorService {
         }).collect(Collectors.toList());
     }
 
-    public Optional<ProfessorDTO> findById(long id) {
+    public Optional<ProfessorDTO> findById(int id) {
         return professorRepository.findById(id).map(professor -> {
             ProfessorDTO dto = new ProfessorDTO();
             dto.setId(professor.getId());
@@ -43,7 +43,7 @@ public class ProfessorService {
         return professorDTO;
     }
 
-    public ProfessorDTO update(long id, ProfessorDTO professorDTO) {
+    public ProfessorDTO update(int id, ProfessorDTO professorDTO) {
         return professorRepository.findById(id).map(professor -> {
             professor.setNome(professorDTO.getNome());
             Professor updatedProfessor = professorRepository.save(professor);
@@ -52,7 +52,7 @@ public class ProfessorService {
         }).orElseThrow(() -> new RuntimeException("Professor não encontrado com o id: " + id));
     }
 
-    public void delete(long id) {
+    public void delete(int id) {
         professorRepository.deleteById(id);
     }
 }
